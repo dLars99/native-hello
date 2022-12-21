@@ -1,5 +1,5 @@
 import * as WebBrowser from "expo-web-browser";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, StyleSheet, TouchableOpacity } from "react-native";
 
 import Colors from "../constants/Colors";
@@ -15,6 +15,11 @@ export default function EditScreenInfo({
   data: ViewData;
 }) {
   const [count, setCount] = useState<number>(0);
+  const [max, setMax] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (count === 10) setMax(true);
+  }, [count]);
 
   return (
     <View>
@@ -46,7 +51,12 @@ export default function EditScreenInfo({
 
       <View style={styles.shakeIt}>
         <Text>Here is a button for no reason</Text>
-        <Button onPress={() => setCount(count + 1)} title="Press me!" />
+        <Button
+          disabled={max}
+          onPress={() => setCount(count + 1)}
+          title="Press me!"
+        />
+        {max ? <Text style={styles.enough}>Okay, that's enough.</Text> : null}
         <Text>
           {count === 0
             ? "You have not pressed this button."
@@ -106,5 +116,8 @@ const styles = StyleSheet.create({
   },
   shakeIt: {
     alignItems: "center",
+  },
+  enough: {
+    color: "red",
   },
 });
